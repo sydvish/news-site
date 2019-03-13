@@ -12,10 +12,19 @@ var mongojs = require("mongojs");
 // Require axios and cheerio. This makes the scraping possible
 var axios = require("axios");
 var cheerio = require("cheerio");
-
+const mongoose = require("mongoose");
 
 // Initialize Express
 var app = express();
+
+var PORT = 3000;
+
+// Initialize Express
+var app = express();
+
+// Connect to the Mongo DB
+mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+
 
 app.use(express.static("public"));
 // Database configuration
