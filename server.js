@@ -17,14 +17,16 @@ const mongoose = require("mongoose");
 // Initialize Express
 var app = express();
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
 
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+var MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost/unit18Populater";
 
+// Connect to the Mongo DB
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.use(express.static("public"));
 // Database configuration
@@ -39,7 +41,9 @@ db.on("error", function(error) {
 
 // Main route (simple Hello World Message)
 app.get("/", function(req, res) {
-  res.sendFile("/Users/sydneyvolk/code/AZCHA201901FSF2-FT/18-mongo-mongoose/01-Activities/11-Scraping-into-a-db/Unsolved/index.html");
+  res.sendFile(
+    "/Users/sydneyvolk/code/AZCHA201901FSF2-FT/18-mongo-mongoose/01-Activities/11-Scraping-into-a-db/Unsolved/index.html"
+  );
 });
 
 // TODO: make two more routes
@@ -95,7 +99,6 @@ app.get("/all/db", function(req, res) {
     // An empty array to save the data that we'll scrape
     var results = [];
 
-
     $("div.story-text").each(function(i, element) {
       // Save the text of the element in a "title" variable
       var title = $(element)
@@ -104,30 +107,33 @@ app.get("/all/db", function(req, res) {
       var link = $(element)
         .find("a")
         .attr("href");
+      var teaser = $(element)
+        .find("p.teaser")
+        .text();
       console.log(title);
       console.log(link);
+      console.log(teaser);
       if (title != undefined && link != undefined) {
         // Save these results in an object that we'll push into the results array we defined earlier
         results.push({
           title: title,
-          link: link
+          link: link,
+          teaser: teaser
         });
       }
     });
 
     // Log the results once you've looped through each of the elements found with cheerio
-    db.scrapedData.insert({ results }, function (error, data){
-      res.json(data)
+    db.scrapedData.insert({ results }, function(error, data) {
+      res.json(data);
       // displayResults(data);
-    })
-
+    });
   });
 });
 
 // function displayResults(data) {
 //   // First, empty the table
 //   $("tbody").empty();
-
 
 //   // Then, for each entry of that json...
 //   data.forEach(function(data) {
@@ -144,6 +150,6 @@ app.get("/all/db", function(req, res) {
 /* -/-/-/-/-/-/-/-/-/-/-/-/- */
 
 // Listen on port 3000
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
+app.listen(PORT, function() {
+  console.log("App listening on port: " + PORT);
 });

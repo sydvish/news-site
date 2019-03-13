@@ -10,6 +10,7 @@ function displayResults(data) {
 
     var tr = $("<div>", { class: "card-body" }).append(
       $("<div>", { class: "card-title" }).text(results[i].title),
+      $("<div>", { class: "card-title" }).text(results[i].teaser),
       $("<a>", { class: "card-text" })
         .attr({ href: results[i].link, target: "_blank" })
         .text("link"),
